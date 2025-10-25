@@ -1,0 +1,108 @@
+{
+  "name": "agent",
+  "$schema": "../../node_modules/nx/schemas/project-schema.json",
+  "sourceRoot": "libs/agent/src",
+  "projectType": "library",
+  "targets": {
+    "common:sync": {
+      "executor": "nx:run-commands",
+      "options": {
+        "cwd": ".",
+        "commands": [
+          "rm -rf ./libs/agent/src/common",
+          "mkdir -p ./libs/agent/src/common",
+          "cp -r ./libs/common/src/ai.ts ./libs/agent/src/common/"
+        ],
+        "parallel": false
+      }
+    },
+    "compile": {
+      "executor": "@nx/js:tsc",
+      "outputs": [
+        "{options.outputPath}"
+      ],
+      "dependsOn": [
+        "common:sync"
+      ],
+      "options": {
+        "outputPath": "libs/agent/dist",
+        "main": "libs/agent/src/index.ts",
+        "tsConfig": "libs/agent/tsconfig.lib.json",
+        "assets": [
+          {
+            "glob": "libs/agent/package.json",
+            "input": ".",
+            "output": "."
+          },
+          {
+            "glob": "libs/agent/README.md",
+            "input": ".",
+            "output": "."
+          },
+          {
+            "glob": "libs/agent/LICENSE",
+            "input": ".",
+            "output": "."
+          }
+        ]
+      }
+    },
+    "build": {
+      "executor": "nx:run-commands",
+      "dependsOn": [
+        "compile"
+      ],
+      "options": {
+        "cwd": "libs/agent/dist",
+        "commands": [
+          "../tools/package.sh"
+        ]
+      }
+    },
+    "lint": {
+      "executor": "@nx/linter:eslint",
+      "outputs": [
+        "{options.outputFile}"
+      ],
+      "options": {
+        "lintFilePatterns": [
+          "libs/agent/**/*.ts"
+        ]
+      }
+    },
+    "typecheck": {
+      "executor": "nx:run-commands",
+      "options": {
+        "cwd": "libs/agent",
+        "commands": [
+          "tsc -p tsconfig.json --noEmit"
+        ]
+      }
+    },
+    "publish:git": {
+      "executor": "nx:run-commands",
+      "dependsOn": [
+        "typecheck"
+      ],
+      "options": {
+        "cwd": "libs/agent",
+        "commands": [
+          "./tools/git-publish.sh"
+        ]
+      }
+    },
+    "publish:npm": {
+      "executor": "nx:run-commands",
+      "dependsOn": [
+        "build"
+      ],
+      "options": {
+        "cwd": "libs/agent/dist",
+        "commands": [
+          "npm publish --access public"
+        ]
+      }
+    }
+  },
+  "tags": []
+}

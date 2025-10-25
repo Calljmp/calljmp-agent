@@ -1,0 +1,6 @@
+dist
+tmp
+out-tsc
+build
+tools
+src/common
