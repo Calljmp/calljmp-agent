@@ -1,7 +1,5 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 
-import z from 'zod';
-
 export type ScrapeFormat = 'text' | 'html';
 
 interface ScrapeBaseResult {
@@ -20,7 +18,7 @@ export interface ScrapeHtmlResult extends ScrapeBaseResult {
 
 export type ScrapeResult = ScrapeTextResult | ScrapeHtmlResult;
 
-export function scrape<F extends ScrapeFormat = 'text'>(args: {
+export function scrape<F extends ScrapeFormat>(args: {
   url: string | URL;
   format?: F;
   consent?: {
@@ -38,12 +36,5 @@ export function scrape<F extends ScrapeFormat = 'text'>(args: {
       ? ScrapeHtmlResult
       : never
 > {
-  throw new Error('Not implemented in this environment');
-}
-
-export function structurize<T extends z.ZodSchema<any>>(args: {
-  content: string;
-  schema: T;
-}): Promise<z.infer<T>> {
   throw new Error('Not implemented in this environment');
 }
