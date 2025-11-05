@@ -1,6 +1,7 @@
 import * as workflow from './workflow';
 import * as web from './web';
 import * as llm from './llm';
+import * as vault from './vault';
 
 export type {
   AgentParallelOptions,
@@ -31,4 +32,4 @@ export type {
   Message,
 } from './llm';
 
-export { workflow, web, llm };
+export { workflow, web, llm, vault };
