@@ -23,14 +23,34 @@ type InstructModelsWithVision =
 
 type InstructModel = InstructModelsWithTools | InstructModelsWithVision;
 
-export type Model = InstructModel;
+const OpenAIModels = {
+  GPT_5: 'openai/gpt-5' as const,
+  GPT_5_Mini: 'openai/gpt-5-mini' as const,
+  GPT_5_Nano: 'openai/gpt-5-nano' as const,
+  GPT_5_Codex: 'openai/gpt-5-codex' as const,
+  GPT_41: 'openai/gpt-4.1' as const,
+  GPT_41_Mini: 'openai/gpt-4.1-mini' as const,
+  GPT_41_Nano: 'openai/gpt-4.1-nano' as const,
+  GPT_4o: 'openai/gpt-4o' as const,
+  GPT_4o_Mini: 'openai/gpt-4o-mini' as const,
+} as const;
 
-export type Tool<Parameters extends z.ZodSchema<any> = z.ZodSchema<any>> = {
+type OpenAIModel =
+  | (typeof OpenAIModels)[keyof typeof OpenAIModels]
+  | (`openai/${string}` & {});
+
+export type Model = InstructModel | OpenAIModel;
+
+export type Tool<
+  Parameters extends z.ZodObject<any> = z.ZodObject<any>,
+  Result = any,
+> = {
   type: 'function';
   function: {
     name: string;
     description: string;
     parameters: Parameters;
+    execute: (params: z.infer<Parameters>) => Promise<Result> | Result;
   };
 };
 
@@ -40,19 +60,36 @@ export type MultimodalContent =
   | TextContext
   | Array<{ type: 'text'; text: string } | { type: 'image'; url: string }>;
 
-export type MessageRole = 'system' | 'user' | 'assistant' | 'tool';
+export type JsonContent = Record<string, any>;
 
-export interface Message<Content = TextContext> {
-  role: MessageRole;
-  content: Content;
-  toolCallId?: string;
+export type InputRole = 'system' | 'user' | 'assistant';
+
+interface BaseInput {
+  role: InputRole;
 }
 
-interface InstructParameters<
-  Content = TextContext,
-  Schema extends z.ZodSchema<any> = z.ZodSchema<any>,
-> {
-  messages: Array<Message<Content>>;
+export interface SystemInput<Content = TextContext> extends BaseInput {
+  role: 'system';
+  content: Content;
+}
+
+export interface UserInput<Content = TextContext> extends BaseInput {
+  role: 'user';
+  content: Content;
+}
+
+export interface AssistantInput<Content = TextContext> extends BaseInput {
+  role: 'assistant';
+  content: Content;
+}
+
+export type Input = SystemInput | UserInput | AssistantInput;
+
+export function generate<
+  Schema extends z.ZodObject<any> | undefined = undefined,
+>(args: {
+  model?: Model;
+  input: Array<Input>;
   maxTokens?: number;
   temperature?: number;
   topP?: number;
@@ -61,67 +98,25 @@ interface InstructParameters<
   repetitionPenalty?: number;
   frequencyPenalty?: number;
   presencePenalty?: number;
+  toolChoice?: 'auto' | 'required' | 'none';
+  tools?: Array<Tool<any>>;
   // stream?: boolean;
   // raw?: boolean;
   responseSchema?: Schema;
-}
-
-interface ChatResponse<ToolParameters = any, SchemaOutput = any> {
-  response: SchemaOutput;
-  usage?: {
-    promptTokens: number;
-    completionTokens: number;
-    totalTokens: number;
-  };
-  toolCalls?: Array<{
-    id?: string;
-    type: 'function';
-    function: {
-      name: string;
-      arguments: ToolParameters;
-    };
-  }>;
-}
-
-export function generate<
-  M extends InstructModel,
-  Content = TextContext,
-  Schema extends z.ZodSchema<any> = z.ZodSchema<any>,
->(
-  args: { model?: M } & InstructParameters<Content, Schema>
-): Promise<
-  M extends InstructModel ? ChatResponse<any, z.infer<Schema>> : string
-> {
+}): Promise<{
+  response: Schema extends z.ZodObject<any> ? z.infer<Schema> : string;
+}> {
   throw new Error('Not implemented in this environment');
 }
 
-export function chat<
-  T extends Tool = Tool,
-  Schema extends z.ZodSchema<any> = z.ZodSchema<any>,
->(
-  args: { model?: InstructModelsWithVision; tools?: T[] } & InstructParameters<
-    MultimodalContent,
-    Schema
-  >
-): Promise<ChatResponse<z.infer<T['function']['parameters']>, z.infer<Schema>>>;
-
-export function chat<
-  T extends Tool = Tool,
-  Schema extends z.ZodSchema<any> = z.ZodSchema<any>,
->(
-  args: { model?: InstructModelsWithTools; tools?: T[] } & InstructParameters<
-    TextContext,
-    Schema
-  >
-): Promise<ChatResponse<z.infer<T['function']['parameters']>, z.infer<Schema>>>;
-
-export function chat<
-  T extends Tool = Tool,
-  Schema extends z.ZodSchema<any> = z.ZodSchema<any>,
->(
-  args: { model?: InstructModel; tools?: T[] } & InstructParameters<any, Schema>
-): Promise<
-  ChatResponse<z.infer<T['function']['parameters']>, z.infer<Schema>>
-> {
+export function tool<
+  Parameters extends z.ZodObject<any>,
+  Result = any,
+>(config: {
+  name: string;
+  description: string;
+  parameters: Parameters;
+  execute: (params: z.infer<Parameters>) => Promise<Result> | Result;
+}): Tool<Parameters, Result> {
   throw new Error('Not implemented in this environment');
 }

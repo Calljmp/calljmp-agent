@@ -28,8 +28,14 @@ export type {
   Tool,
   TextContext,
   MultimodalContent,
-  MessageRole,
-  Message,
+  JsonContent,
+  InputRole,
+  Input,
+  SystemInput,
+  UserInput,
+  AssistantInput,
 } from './llm';
+
+export type { KeyValues } from './vault';
 
 export { workflow, web, llm, vault };

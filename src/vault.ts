@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 
-interface Values {
+export interface KeyValues {
   [keyName: string]: string | number | Record<string, unknown> | null;
 }
 
-export const values: Values = {};
+export const values: KeyValues = {};
