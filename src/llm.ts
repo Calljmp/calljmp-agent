@@ -103,6 +103,7 @@ export function generate<
   // stream?: boolean;
   // raw?: boolean;
   responseSchema?: Schema;
+  maxIterations?: number;
 }): Promise<{
   response: Schema extends z.ZodObject<any> ? z.infer<Schema> : string;
 }> {

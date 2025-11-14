@@ -2,6 +2,7 @@ import * as workflow from './workflow';
 import * as web from './web';
 import * as llm from './llm';
 import * as vault from './vault';
+import * as integrations from './integrations';
 
 export type {
   AgentParallelOptions,
@@ -38,4 +39,4 @@ export type {
 
 export type { KeyValues } from './vault';
 
-export { workflow, web, llm, vault };
+export { workflow, web, llm, vault, integrations };
