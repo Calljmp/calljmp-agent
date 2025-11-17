@@ -29,15 +29,15 @@ const SystemModels = {
 type SystemModel = (typeof SystemModels)[keyof typeof SystemModels]['name'];
 
 type SystemModelWithJsonSchema = {
-  [K in keyof typeof SystemModels]: typeof SystemModels[K]['capabilities']['jsonSchema'] extends true
-  ? typeof SystemModels[K]
-  : never;
+  [K in keyof typeof SystemModels]: (typeof SystemModels)[K]['capabilities']['jsonSchema'] extends true
+    ? (typeof SystemModels)[K]
+    : never;
 }[keyof typeof SystemModels]['name'];
 
 type SystemModelWithTools = {
-  [K in keyof typeof SystemModels]: typeof SystemModels[K]['capabilities']['tools'] extends true
-  ? typeof SystemModels[K]
-  : never;
+  [K in keyof typeof SystemModels]: (typeof SystemModels)[K]['capabilities']['tools'] extends true
+    ? (typeof SystemModels)[K]
+    : never;
 }[keyof typeof SystemModels]['name'];
 
 const OpenAIModels = {
@@ -104,13 +104,13 @@ export type Input = SystemInput | UserInput | AssistantInput;
 
 export function generate<
   Schema extends z.ZodObject<any> | undefined = undefined,
-  Tools extends Array<Tool<any>> | undefined = undefined
+  Tools extends Array<Tool<any>> | undefined = undefined,
 >(args: {
   model?: Schema extends z.ZodObject<any>
-  ? OpenAIModel | SystemModelWithJsonSchema
-  : Tools extends Array<Tool<any>>
-  ? OpenAIModel | SystemModelWithTools
-  : Model;
+    ? OpenAIModel | SystemModelWithJsonSchema
+    : Tools extends Array<Tool<any>>
+      ? OpenAIModel | SystemModelWithTools
+      : Model;
   input: Array<Input>;
   maxTokens?: number;
   temperature?: number;
@@ -121,7 +121,7 @@ export function generate<
   frequencyPenalty?: number;
   presencePenalty?: number;
   toolChoice?: 'auto' | 'required' | 'none';
-  tools?: Tools,
+  tools?: Tools;
   // stream?: boolean;
   // raw?: boolean;
   responseSchema?: Schema;
