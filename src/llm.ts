@@ -2,26 +2,43 @@
 
 import { z } from 'zod';
 
-const InstructModelsWithTools = {
-  Mistralai_Small_31_24B:
-    '@cf/mistralai/mistral-small-3.1-24b-instruct' as const,
-  Hermes_2_Pro_Mistral_7B: '@hf/nousresearch/hermes-2-pro-mistral-7b' as const,
+const SystemModels = {
+  Mistralai_Small_31_24B: {
+    name: '@cf/mistralai/mistral-small-3.1-24b-instruct' as const,
+    capabilities: {
+      tools: true,
+      jsonSchema: false,
+    },
+  },
+  Meta_Llama_31_8B_Instruct: {
+    name: '@cf/meta/llama-3.1-8b-instruct' as const,
+    capabilities: {
+      tools: true,
+      jsonSchema: true,
+    },
+  },
+  Meta_Llama_31_8B_Instruct_FP8_Fast: {
+    name: '@cf/meta/llama-3.1-8b-instruct-fp8-fast' as const,
+    capabilities: {
+      tools: false,
+      jsonSchema: false,
+    },
+  },
 } as const;
 
-type InstructModelsWithTools =
-  (typeof InstructModelsWithTools)[keyof typeof InstructModelsWithTools];
+type SystemModel = (typeof SystemModels)[keyof typeof SystemModels]['name'];
 
-const InstructModelsWithVision = {
-  Mistralai_Small_31_24B:
-    '@cf/mistralai/mistral-small-3.1-24b-instruct' as const,
-  Llama4_Scout_17B_16E: '@cf/meta/llama-4-scout-17b-16e-instruct' as const,
-  Llama31_8B_Fast: '@cf/meta/llama-3.1-8b-instruct-fast' as const,
-} as const;
+type SystemModelWithJsonSchema = {
+  [K in keyof typeof SystemModels]: typeof SystemModels[K]['capabilities']['jsonSchema'] extends true
+  ? typeof SystemModels[K]
+  : never;
+}[keyof typeof SystemModels]['name'];
 
-type InstructModelsWithVision =
-  (typeof InstructModelsWithVision)[keyof typeof InstructModelsWithVision];
-
-type InstructModel = InstructModelsWithTools | InstructModelsWithVision;
+type SystemModelWithTools = {
+  [K in keyof typeof SystemModels]: typeof SystemModels[K]['capabilities']['tools'] extends true
+  ? typeof SystemModels[K]
+  : never;
+}[keyof typeof SystemModels]['name'];
 
 const OpenAIModels = {
   GPT_5: 'openai/gpt-5' as const,
@@ -39,7 +56,7 @@ type OpenAIModel =
   | (typeof OpenAIModels)[keyof typeof OpenAIModels]
   | (`openai/${string}` & {});
 
-export type Model = InstructModel | OpenAIModel;
+export type Model = SystemModel | OpenAIModel;
 
 export type Tool<
   Parameters extends z.ZodObject<any> = z.ZodObject<any>,
@@ -87,8 +104,13 @@ export type Input = SystemInput | UserInput | AssistantInput;
 
 export function generate<
   Schema extends z.ZodObject<any> | undefined = undefined,
+  Tools extends Array<Tool<any>> | undefined = undefined
 >(args: {
-  model?: Model;
+  model?: Schema extends z.ZodObject<any>
+  ? OpenAIModel | SystemModelWithJsonSchema
+  : Tools extends Array<Tool<any>>
+  ? OpenAIModel | SystemModelWithTools
+  : Model;
   input: Array<Input>;
   maxTokens?: number;
   temperature?: number;
@@ -99,7 +121,7 @@ export function generate<
   frequencyPenalty?: number;
   presencePenalty?: number;
   toolChoice?: 'auto' | 'required' | 'none';
-  tools?: Array<Tool<any>>;
+  tools?: Tools,
   // stream?: boolean;
   // raw?: boolean;
   responseSchema?: Schema;
