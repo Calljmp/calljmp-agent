@@ -3,6 +3,7 @@ import * as web from './web';
 import * as llm from './llm';
 import * as vault from './vault';
 import * as integrations from './integrations';
+import * as datasets from './datasets';
 
 export type {
   AgentParallelOptions,
@@ -37,6 +38,16 @@ export type {
   AssistantInput,
 } from './llm';
 
+export type {
+  DatasetSegment,
+  DatasetPageSegment,
+  DatasetSegmentType,
+} from './datasets';
+
+export type { AgentConfig } from './config';
+
 export type { KeyValues } from './vault';
 
-export { workflow, web, llm, vault, integrations };
+import type * as schema from './schema';
+
+export { workflow, web, llm, vault, integrations, schema, datasets };

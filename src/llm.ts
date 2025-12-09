@@ -111,7 +111,7 @@ export function generate<
     : Tools extends Array<Tool<any>>
       ? OpenAIModel | SystemModelWithTools
       : Model;
-  input: Array<Input>;
+  input: (Input | Promise<Input>)[];
   maxTokens?: number;
   temperature?: number;
   topP?: number;
