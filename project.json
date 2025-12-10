@@ -11,7 +11,7 @@
         "commands": [
           "rm -rf ./libs/agent/src/common",
           "mkdir -p ./libs/agent/src/common",
-          "cp -r ./libs/common/src/ai.ts ./libs/agent/src/common/"
+          "cp -r ./libs/common/src/{ai,error,time}.ts ./libs/agent/src/common/"
         ],
         "parallel": false
       }

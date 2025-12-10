@@ -4,6 +4,7 @@ import {
   AgentPhaseConfig,
   AgentRetryOptions,
   AgentParallelOptions,
+  AgentSuspendOptions,
 } from './common/ai';
 
 const StubError = new Error('Not implemented in this environment');
@@ -58,5 +59,9 @@ export function parallel<Tasks extends ReadonlyArray<Result<unknown>>>(
   options: AgentParallelOptions,
   tasks: [...Tasks]
 ): ParallelResult<{ [K in keyof Tasks]: Awaited<TaskResult<Tasks[K]>> }> {
+  throw StubError;
+}
+
+export function suspend(options?: AgentSuspendOptions): Promise<void> {
   throw StubError;
 }
