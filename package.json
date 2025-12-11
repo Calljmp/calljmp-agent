@@ -1,6 +1,6 @@
 {
   "name": "@calljmp/agent",
-  "version": "0.0.9",
+  "version": "0.0.10",
   "description": "Calljmp AI agent",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",

@@ -62,6 +62,6 @@ export function parallel<Tasks extends ReadonlyArray<Result<unknown>>>(
   throw StubError;
 }
 
-export function suspend(options?: AgentSuspendOptions): Promise<void> {
+export function suspend(options?: string | AgentSuspendOptions): Promise<void> {
   throw StubError;
 }
