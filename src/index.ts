@@ -4,6 +4,7 @@ import * as llm from './llm';
 import * as vault from './vault';
 import * as integrations from './integrations';
 import * as datasets from './datasets';
+import * as live from './live';
 
 export type {
   AgentParallelOptions,
@@ -50,4 +51,4 @@ export type { KeyValues } from './vault';
 
 import type * as schema from './schema';
 
-export { workflow, web, llm, vault, integrations, schema, datasets };
+export { workflow, web, llm, vault, integrations, schema, datasets, live };

@@ -3,25 +3,18 @@
 import { z } from 'zod';
 
 const SystemModels = {
-  Mistralai_Small_31_24B: {
-    name: '@cf/mistralai/mistral-small-3.1-24b-instruct' as const,
-    capabilities: {
-      tools: true,
-      jsonSchema: false,
-    },
-  },
-  Meta_Llama_31_8B_Instruct: {
-    name: '@cf/meta/llama-3.1-8b-instruct' as const,
-    capabilities: {
-      tools: true,
-      jsonSchema: true,
-    },
-  },
   Meta_Llama_31_8B_Instruct_FP8_Fast: {
     name: '@cf/meta/llama-3.1-8b-instruct-fp8-fast' as const,
     capabilities: {
       tools: false,
       jsonSchema: false,
+    },
+  },
+  Qwen3_30B_A3B_FP8: {
+    name: '@cf/qwen/qwen3-30b-a3b-fp8' as const,
+    capabilities: {
+      tools: true,
+      jsonSchema: true,
     },
   },
 } as const;
