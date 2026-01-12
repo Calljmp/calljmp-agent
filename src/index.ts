@@ -5,6 +5,7 @@ import * as vault from './vault';
 import * as integrations from './integrations';
 import * as datasets from './datasets';
 import * as live from './live';
+import * as memory from './memory';
 
 export type {
   AgentParallelOptions,
@@ -45,10 +46,22 @@ export type {
   DatasetSegmentType,
 } from './datasets';
 
+export type { MemoryProvider, MemoryContext } from './memory';
+
 export type { AgentConfig } from './config';
 
 export type { KeyValues } from './vault';
 
 import type * as schema from './schema';
 
-export { workflow, web, llm, vault, integrations, schema, datasets, live };
+export {
+  workflow,
+  web,
+  llm,
+  vault,
+  integrations,
+  schema,
+  datasets,
+  live,
+  memory,
+};

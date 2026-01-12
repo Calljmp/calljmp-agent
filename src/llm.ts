@@ -1,6 +1,7 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 
 import { z } from 'zod';
+import { MemoryContext } from './memory';
 
 const SystemModels = {
   Meta_Llama_31_8B_Instruct_FP8_Fast: {
@@ -76,6 +77,7 @@ export type InputRole = 'system' | 'user' | 'assistant';
 
 interface BaseInput {
   role: InputRole;
+  timestamp?: number;
 }
 
 export interface SystemInput<Content = TextContext> extends BaseInput {
@@ -94,6 +96,8 @@ export interface AssistantInput<Content = TextContext> extends BaseInput {
 }
 
 export type Input = SystemInput | UserInput | AssistantInput;
+
+type TrimmingStrategy = 'removeOldest' | 'summarizeOldest';
 
 export function generate<
   Schema extends z.ZodObject<any> | undefined = undefined,
@@ -119,6 +123,13 @@ export function generate<
   // raw?: boolean;
   responseSchema?: Schema;
   maxIterations?: number;
+  memory?: MemoryContext;
+  trim?:
+    | {
+        strategy?: TrimmingStrategy;
+        maxTokens?: number;
+      }
+    | TrimmingStrategy;
 }): Promise<{
   response: Schema extends z.ZodObject<any> ? z.infer<Schema> : string;
 }> {
@@ -134,5 +145,9 @@ export function tool<
   parameters: Parameters;
   execute: (params: z.infer<Parameters>) => Promise<Result> | Result;
 }): Tool<Parameters, Result> {
+  throw new Error('Not implemented in this environment');
+}
+
+export function context(memory: MemoryContext): Promise<{ history: Input[] }> {
   throw new Error('Not implemented in this environment');
 }
