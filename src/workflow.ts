@@ -5,7 +5,7 @@ import {
   AgentRetryOptions,
   AgentParallelOptions,
   AgentSuspendOptions,
-} from './common/ai';
+} from './common/agent';
 
 const StubError = new Error('Not implemented in this environment');
 

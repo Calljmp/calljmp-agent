@@ -11,7 +11,9 @@
         "commands": [
           "rm -rf ./libs/agent/src/common",
           "mkdir -p ./libs/agent/src/common",
-          "cp -r ./libs/common/src/{ai,error,time}.ts ./libs/agent/src/common/"
+          "cp ./libs/common/src/agent.ts ./libs/agent/src/common/",
+          "cp ./libs/common/src/error.ts ./libs/agent/src/common/",
+          "cp ./libs/common/src/time.ts ./libs/agent/src/common/"
         ],
         "parallel": false
       }
@@ -22,7 +24,7 @@
         "{options.outputPath}"
       ],
       "dependsOn": [
-        "common:sync"
+        "agent:common:sync"
       ],
       "options": {
         "outputPath": "libs/agent/dist",
@@ -50,7 +52,7 @@
     "build": {
       "executor": "nx:run-commands",
       "dependsOn": [
-        "compile"
+        "agent:compile"
       ],
       "options": {
         "cwd": "libs/agent/dist",
@@ -82,7 +84,7 @@
     "publish:git": {
       "executor": "nx:run-commands",
       "dependsOn": [
-        "typecheck"
+        "agent:typecheck"
       ],
       "options": {
         "cwd": "libs/agent",
@@ -94,7 +96,7 @@
     "publish:npm": {
       "executor": "nx:run-commands",
       "dependsOn": [
-        "build"
+        "agent:build"
       ],
       "options": {
         "cwd": "libs/agent/dist",

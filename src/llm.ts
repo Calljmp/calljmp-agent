@@ -151,3 +151,14 @@ export function tool<
 export function context(memory: MemoryContext): Promise<{ history: Input[] }> {
   throw new Error('Not implemented in this environment');
 }
+
+export interface Prompt {
+  readonly name: string;
+  content: () => Promise<string>;
+}
+
+export interface Prompts {
+  [keyName: string]: Prompt;
+}
+
+export const prompts: Prompts = {};

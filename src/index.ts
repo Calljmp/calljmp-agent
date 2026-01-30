@@ -11,7 +11,8 @@ export type {
   AgentParallelOptions,
   AgentRetryOptions,
   AgentPhaseConfig,
-} from './common/ai';
+  AgentSuspendOptions,
+} from './common/agent';
 
 export type {
   Result,
@@ -38,6 +39,8 @@ export type {
   SystemInput,
   UserInput,
   AssistantInput,
+  Prompt,
+  Prompts,
 } from './llm';
 
 export type {
