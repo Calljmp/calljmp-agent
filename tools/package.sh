@@ -28,7 +28,7 @@ jq ".types = \"./index.d.ts\"" "$OUTPUT_JSON" >"$TEMP_JSON" && mv "$TEMP_JSON" "
 jq 'del(.module)' "$OUTPUT_JSON" >"$TEMP_JSON" && mv "$TEMP_JSON" "$OUTPUT_JSON"
 jq 'del(.type)' "$OUTPUT_JSON" >"$TEMP_JSON" && mv "$TEMP_JSON" "$OUTPUT_JSON"
 
-jq '.files = ["*.js", "*.d.ts", "*.d.ts.map", "README.md", "LICENSE"]' "$OUTPUT_JSON" >"$TEMP_JSON" && mv "$TEMP_JSON" "$OUTPUT_JSON"
+jq '.files = ["**/*.js", "**/*.d.ts", "**/*.d.ts.map", "README.md", "LICENSE"]' "$OUTPUT_JSON" >"$TEMP_JSON" && mv "$TEMP_JSON" "$OUTPUT_JSON"
 
 jq '.exports = {
   ".": {
