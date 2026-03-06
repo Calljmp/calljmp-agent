@@ -26,6 +26,11 @@ export type {
   ScrapeHtmlResult,
   ScrapeResult,
   ScrapeTextResult,
+  WebFilterOperators,
+  WebAttributeFilters,
+  WebTextFilters,
+  WebExtractOptions,
+  WebExtractedElement,
 } from './web';
 
 export type {

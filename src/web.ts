@@ -2,6 +2,46 @@
 
 export type ScrapeFormat = 'text' | 'html';
 
+export interface WebFilterOperators {
+  $eq?: string | number | boolean;
+  $ne?: string | number | boolean;
+  $contains?: string;
+  $startsWith?: string;
+  $endsWith?: string;
+  $regex?: string;
+  $exists?: boolean;
+  $in?: (string | number)[];
+  $nin?: (string | number)[];
+}
+
+export interface WebAttributeFilters {
+  [attribute: string]: WebFilterOperators;
+}
+
+export interface WebTextFilters {
+  $contains?: string;
+  $startsWith?: string;
+  $endsWith?: string;
+  $regex?: string;
+}
+
+export interface WebExtractOptions {
+  selector: string;
+  where?: {
+    attributes?: WebAttributeFilters;
+    text?: WebTextFilters;
+  };
+  fields?: ('html' | 'text' | 'attributes' | 'url' | 'index')[];
+}
+
+export interface WebExtractedElement {
+  html?: string;
+  text?: string;
+  attributes?: Record<string, string>;
+  url?: string;
+  index?: number;
+}
+
 interface ScrapeBaseResult {
   format: ScrapeFormat;
 }
@@ -16,9 +56,20 @@ export interface ScrapeHtmlResult extends ScrapeBaseResult {
   content: string;
 }
 
-export type ScrapeResult = ScrapeTextResult | ScrapeHtmlResult;
+export interface ScrapeExtractedResult extends ScrapeBaseResult {
+  format: 'html';
+  content: Array<WebExtractedElement[]>;
+}
 
-export function scrape<F extends ScrapeFormat>(args: {
+export type ScrapeResult =
+  | ScrapeTextResult
+  | ScrapeHtmlResult
+  | ScrapeExtractedResult;
+
+export function scrape<
+  F extends ScrapeFormat,
+  E extends WebExtractOptions[] | undefined = undefined,
+>(args: {
   url: string | URL;
   format?: F;
   consent?: {
@@ -29,12 +80,15 @@ export function scrape<F extends ScrapeFormat>(args: {
     enabled?: boolean;
     maxScrolls?: number;
   };
+  extract?: E;
 }): Promise<
-  F extends 'text'
-    ? ScrapeTextResult
-    : F extends 'html'
-      ? ScrapeHtmlResult
-      : never
+  E extends WebExtractOptions[]
+    ? ScrapeExtractedResult
+    : F extends 'text'
+      ? ScrapeTextResult
+      : F extends 'html'
+        ? ScrapeHtmlResult
+        : never
 > {
   throw new Error('Not implemented in this environment');
 }
