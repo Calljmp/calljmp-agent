@@ -18,6 +18,13 @@ const SystemModels = {
       jsonSchema: true,
     },
   },
+  Zai_GLM_47_Flash: {
+    name: '@cf/zai-org/glm-4.7-flash' as const,
+    capabilities: {
+      tools: true,
+      jsonSchema: true,
+    },
+  },
 } as const;
 
 type SystemModel = (typeof SystemModels)[keyof typeof SystemModels]['name'];

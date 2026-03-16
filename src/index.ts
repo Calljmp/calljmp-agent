@@ -12,6 +12,11 @@ export type {
   AgentRetryOptions,
   AgentPhaseConfig,
   AgentSuspendOptions,
+  AgentOutcomeStatus,
+  AgentOutcome,
+  AgentFailedOutcome,
+  AgentCanceledOutcome,
+  AgentCompletedOutcome,
 } from './common/agent';
 
 export type {
@@ -26,6 +31,7 @@ export type {
   ScrapeHtmlResult,
   ScrapeResult,
   ScrapeTextResult,
+  ScrapeExtractedResult,
   WebFilterOperators,
   WebAttributeFilters,
   WebTextFilters,

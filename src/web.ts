@@ -48,6 +48,8 @@ interface ScrapeBaseResult {
 
 export interface ScrapeTextResult extends ScrapeBaseResult {
   format: 'text';
+  content: string;
+  /** @deprecated Use `content` instead */
   text: string;
 }
 
@@ -83,12 +85,12 @@ export function scrape<
   extract?: E;
 }): Promise<
   E extends WebExtractOptions[]
-    ? ScrapeExtractedResult
-    : F extends 'text'
-      ? ScrapeTextResult
-      : F extends 'html'
-        ? ScrapeHtmlResult
-        : never
+  ? ScrapeExtractedResult
+  : F extends 'text'
+  ? ScrapeTextResult
+  : F extends 'html'
+  ? ScrapeHtmlResult
+  : never
 > {
   throw new Error('Not implemented in this environment');
 }
