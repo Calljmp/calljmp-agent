@@ -85,12 +85,12 @@ export function scrape<
   extract?: E;
 }): Promise<
   E extends WebExtractOptions[]
-  ? ScrapeExtractedResult
-  : F extends 'text'
-  ? ScrapeTextResult
-  : F extends 'html'
-  ? ScrapeHtmlResult
-  : never
+    ? ScrapeExtractedResult
+    : F extends 'text'
+      ? ScrapeTextResult
+      : F extends 'html'
+        ? ScrapeHtmlResult
+        : never
 > {
   throw new Error('Not implemented in this environment');
 }
