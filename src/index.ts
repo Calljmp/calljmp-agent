@@ -8,6 +8,7 @@ import * as live from './live';
 import * as memory from './memory';
 
 export type {
+  AgentContext,
   AgentParallelOptions,
   AgentRetryOptions,
   AgentPhaseConfig,
